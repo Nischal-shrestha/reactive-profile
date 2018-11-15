@@ -1,0 +1,28 @@
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Nunito");
+
+// Variables
+@import "variables";
+
+// Typography
+@import "typography";
+
+// Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+.navbar-laravel {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+// Overriding Bootstrap Defaults
+.border-dark {
+    color: $off-black !important;
+}
+
+.form-alert {
+    height: 30px !important;
+    padding: 0 !important;
+    margin: 4px 0 !important;
+    text-align: center !important;
+}
