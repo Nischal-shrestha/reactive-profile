@@ -66,7 +66,7 @@ class Register extends Component {
         if (this.state.email.length === 0) {
             errors.push("Please enter your email.");
         } else if (
-            this.state.email.split("").filter(x => x === "@").length !== 1 &&
+            this.state.email.split("").filter(x => x === "@").length === 1 &&
             this.state.email.indexOf(".") === -1
         ) {
             errors.push("Invalid email format.");
@@ -152,7 +152,7 @@ class Register extends Component {
                                     type="password"
                                     className="form-control"
                                     id="rePassword"
-                                    placeholder="Password"
+                                    placeholder="Retype Password"
                                     onChange={this.handleInput}
                                 />
                             </div>

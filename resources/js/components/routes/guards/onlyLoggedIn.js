@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import Cookie from "universal-cookie";
 import { withRouter } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 /**
  * A High Level Component (HOC) that
@@ -16,7 +18,11 @@ export default GuardedComponent => {
         }
 
         isLoggedIn = () => {
+            const cookies = new Cookies();
             if (this.props.auth.user.loggedIn !== true) {
+                this.props.history.push("/login");
+            } else if (!cookies.get("JWT")) {
+                this.props.logout();
                 this.props.history.push("/login");
             }
         };

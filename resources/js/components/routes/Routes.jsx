@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import { Switch, Route, withRouter } from "react-router-dom";
+/**
+ * Components
+ */
+import Welcome from "../Welcome";
 import Login from "../Login";
 import Register from "../Register";
 import Profile from "../Profile";
+import NotFound from "../NotFound";
 
 /**
  * ALl the routes are listed
@@ -17,6 +22,7 @@ class Routes extends Component {
     render() {
         return (
             <Switch>
+                <Route exact path="/" component={Welcome} />
                 <Route
                     exact
                     path="/login"
@@ -37,6 +43,14 @@ class Routes extends Component {
                         />
                     )}
                 />
+
+                {/* 
+                    This Route MUST be at the END
+                    Wildcard route catches all other
+                    routes that are not declared and
+                    displays a 404 page.
+                 */}
+                <Route path="*" component={NotFound} />
             </Switch>
         );
     }

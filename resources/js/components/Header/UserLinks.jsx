@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const UserLinks = props => (
-    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+    <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+        <ul className="navbar-nav ml-auto">
+            <li className="nav-item">
                 <Link
                     className="nav-link font-weight-bold btn"
                     role="button"
@@ -13,7 +13,7 @@ const UserLinks = props => (
                     Profile
                 </Link>
             </li>
-            <li class="nav-item ml-2">
+            <li className="nav-item ml-2">
                 <a
                     className="nav-link font-weight-bold btn"
                     role="button"
