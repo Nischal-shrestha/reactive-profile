@@ -1,4 +1,5 @@
 import React from "react";
+import onlyGuestComponent from "./routes/guards/onlyGuest";
 
 const Welcome = () => {
     return (
@@ -8,4 +9,4 @@ const Welcome = () => {
     );
 };
 
-export default Welcome;
+export default onlyGuestComponent(Welcome);

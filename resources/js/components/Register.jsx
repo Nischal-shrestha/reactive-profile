@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+import axios from "axios";
+import Cookies from "universal-cookie";
 import onlyGuestComponent from "./routes/guards/onlyGuest";
+import { register_url, register_headers } from "./config";
 
 class Register extends Component {
     state = {
@@ -7,7 +10,8 @@ class Register extends Component {
         email: "", //user email
         password: "", //user password
         rePassword: "", //user re-password
-        errors: [] //validation errors
+        errors: [], //validation errors
+        loading: false
     };
 
     constructor(props) {
@@ -33,23 +37,59 @@ class Register extends Component {
         e.preventDefault();
 
         const errors = this.validateFields();
-
+        const cookies = new Cookies();
         if (errors.length !== 0) {
             this.setState({
                 errors
             });
         } else {
-            //Ajax call to get register the user, get token and redirect them
-            let auth = {
-                user: {
-                    email: this.state.email,
-                    name: this.state.name,
-                    loggedIn: true
-                },
-                token: "asffasdlasdnadj@NQJKNE!IOEJ@O!I"
-            };
-            this.props.setAuthState(auth);
-            this.props.history.push("/profile");
+            this.setState({
+                loading: true
+            });
+
+            axios
+                .post(register_url, this.state, { headers: register_headers })
+                .then(response => {
+                    this.setState({
+                        loading: false
+                    });
+                    //check if the user has been created
+                    if (response.data.status === "CREATED") {
+                        //set cookie
+                        cookies.set(
+                            "JWT",
+                            response.data.token_type +
+                                response.data.access_token,
+                            { path: "/" }
+                        );
+
+                        //change state of the application to logged in
+                        let auth = {
+                            user: {
+                                id: response.data.user.id,
+                                email: response.data.user.email,
+                                name: response.data.user.name
+                            },
+                            loggedIn: true
+                        };
+                        this.props.setAuthState(auth);
+                    } else {
+                        const errors = [];
+                        const responseError = response.data.errors;
+                        for (var key in responseError) {
+                            errors.push(responseError[key].toString());
+                        }
+                        this.setState({
+                            errors
+                        });
+                    }
+                })
+                .catch(error => {
+                    this.setState({
+                        loading: false
+                    });
+                    console.log("REGISTER", error);
+                });
         }
     };
 
@@ -79,6 +119,9 @@ class Register extends Component {
         } else if (this.state.password !== this.state.rePassword) {
             errors.push("Your passwords do not match");
         }
+        if (this.state.password.length > 0 && this.state.password.length < 6) {
+            errors.push("Your password must be atleast 6 characters long");
+        }
 
         return errors;
     };
@@ -102,6 +145,7 @@ class Register extends Component {
      * Component Render
      */
     render() {
+        let loading = this.state.loading;
         return (
             <div className="container mt-5">
                 <div className="row">
@@ -160,8 +204,9 @@ class Register extends Component {
                                 onClick={this.tryRegister}
                                 type="submit"
                                 className="btn btn-primary"
+                                disabled={loading}
                             >
-                                Sign Up!
+                                {loading ? "Signing you up...." : "Sign Up!"}
                             </button>
                         </form>
                     </div>

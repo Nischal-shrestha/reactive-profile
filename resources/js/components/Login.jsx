@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
-import Cookie from "universal-cookie";
+import Cookies from "universal-cookie";
 import onlyGuestComponent from "./routes/guards/onlyGuest";
 import { login_url, logout_url, login_headers } from "./config";
-import Cookies from "universal-cookie";
 
 class Login extends Component {
     state = {
@@ -68,10 +67,11 @@ class Login extends Component {
                         //change state of the application to logged in
                         let auth = {
                             user: {
+                                id: response.data.user.id,
                                 email: response.data.user.email,
-                                name: response.data.user.name,
-                                loggedIn: true
-                            }
+                                name: response.data.user.name
+                            },
+                            loggedIn: true
                         };
                         this.props.setAuthState(auth);
                     } else {

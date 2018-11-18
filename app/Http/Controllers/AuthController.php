@@ -35,12 +35,7 @@ class AuthController extends Controller
             $response["status"] = "FAILED";
             $response["error"]["message"] = "Your credentials are invalid.";
         } else {
-            $response["status"] = "SUCCESS";
-            $response["access_token"] = $token;
-            $response["token_type"] = "bearer";
-            $response["user"]["name"] = auth()->user()->name;
-            $response["user"]["email"] = auth()->user()->email;
-            $response["expires_in"] = $this->payload()->get('exp');
+            return $this->respondWithUserAndToken($token);
         }
         return response()->json($response, 200);
        
@@ -49,24 +44,31 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validate = Validator::make($request->all(), User::$storeRules);
-        if (!$validate->fails()) {
-            $user = new User($request->all());
-            $user->password = bcrypt($request->password);
-            if ($user->save()) {
+        if ($request->has(['email', 'password', 'name'])) {
+            $validate = Validator::make($request->all(), User::$storeRules);
+            if (!$validate->fails()) {
+                $user = new User($request->only(['name', 'email', 'password']));
+                $user->password = bcrypt($request->password);
+                if ($user->save()) {
+                    $token = auth()->login($user);
 
-                $token = auth()->login($user);
-                $exp = $this->payload()->get('exp');
-                return response()->json(["status" => "CREATED", 'access_token' => $token, 'token_type' => 'bearer', 'expires_in' => $exp], 201); // 201 - created
-
+                    return $this->respondWithUserAndToken($token, true);
+                }
+                return response()->json(["status" => "FAILED", 'message' => "Couldn't save the user"], 200);
+            } else {
+                $errors["status"] = "FAILED";
+                $errors["errors"] = $validate->errors();
+                return response()->json($errors, 200);// 422 - unprocessable request
             }
-            return response()->json(["status" => "FAILED"], 400);
         } else {
-            $errors["status"] = "FAILED";
-            $errors["errors"] = $validate->errors();
-            return response()->json($errors, 422);// 422 - unprocessable request
+            return response()->json(['status' => 'FAILED', 'message' => 'Invalid Request']);
         }
+
     }
+
+
+
+
     /**
      * Get the authenticated User.
      *
@@ -74,7 +76,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json(['user' => auth()->user()]);
     }
     /**
      * Log the user out (Invalidate the token).
@@ -110,6 +112,21 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
+
+    protected function respondWithUserAndToken($token, $register = false)
+    {
+        $user = auth()->user();
+        $response["status"] = $register ? "CREATED" : "SUCCESS";
+        $response['access_token'] = $token;
+        $response['token_type'] = 'bearer';
+        $response['expires_in'] = auth()->factory()->getTTL() * 60;
+        $response["user"]["id"] = $user->id;
+        $response["user"]["name"] = $user->name;
+        $response["user"]["email"] = $user->email;
+
+        return response()->json($response, $register ? 201 : 200);
+    }
+
     public function payload()
     {
         return auth()->payload();

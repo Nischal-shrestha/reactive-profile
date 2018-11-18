@@ -11,4 +11,4 @@
 |
  */
 
-Route::view('/{path?}', 'spa');
+Route::view('/{path?}', 'spa')->where('path', '.*')->name('react');

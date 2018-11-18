@@ -4,7 +4,7 @@ import GuestLinks from "./GuestLinks";
 import UserLinks from "./UserLinks";
 
 const Header = props => {
-    console.log("header", props);
+    console.log("Header", props);
     return (
         <nav className="navbar navbar-expand-md navbar-dark bg-dark navbar-laravel">
             <div className="container">
@@ -13,9 +13,12 @@ const Header = props => {
                         Reactive Profile
                     </Link>
 
-                    {props.auth.user.loggedIn === false && <GuestLinks />}
-                    {props.auth.user.loggedIn === true && (
-                        <UserLinks logout={props.logout} />
+                    {props.auth.loggedIn === false && <GuestLinks {...props} />}
+                    {props.auth.loggedIn === true && (
+                        <UserLinks
+                            logout={props.logout}
+                            user_id={props.auth.user.id}
+                        />
                     )}
                 </div>
             </div>

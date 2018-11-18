@@ -22,7 +22,11 @@ class Routes extends Component {
     render() {
         return (
             <Switch>
-                <Route exact path="/" component={Welcome} />
+                <Route
+                    exact
+                    path="/"
+                    render={() => <Welcome {...this.props} />}
+                />
                 <Route
                     exact
                     path="/login"
@@ -35,13 +39,8 @@ class Routes extends Component {
                 />
                 <Route
                     exact
-                    path="/profile"
-                    render={() => (
-                        <Profile
-                            auth={this.props.auth}
-                            logout={this.props.logout}
-                        />
-                    )}
+                    path="/user/:userId/profile"
+                    render={() => <Profile {...this.props} />}
                 />
 
                 {/* 

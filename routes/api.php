@@ -22,4 +22,11 @@ Route::group([
     Route::post('login', 'AuthController@login')->name('auth.login');
     Route::post('register', 'AuthController@register')->name('auth.register');
     Route::post('logout', 'AuthController@logout')->name('auth.logout');
+    Route::post('me', 'AuthController@me')->name('auth.me');
+
+    Route::post('user/{id}', 'UserController@show')->name('user.show');
+
+    Route::view('/{path?}', 'spa')->where('path', '.*')->name('react');
+
 });
+

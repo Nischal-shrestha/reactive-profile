@@ -16,8 +16,10 @@ export default GuardedComponent => {
         }
 
         isLoggedIn = () => {
-            if (this.props.auth.user.loggedIn === true) {
-                this.props.history.push("/profile");
+            if (this.props.auth.loggedIn) {
+                this.props.history.push(
+                    "/user/" + this.props.auth.user.id + "/profile"
+                );
             }
         };
 
