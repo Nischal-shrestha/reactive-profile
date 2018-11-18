@@ -20,3 +20,5 @@ export const user_data_url = base_api_url + "/auth/me";
 export const refresh_token_url = base_api_url + "/auth/refresh";
 
 export const user_data_id_url = base_api_url + "/auth/user/";
+
+export const all_user_url = base_api_url + "/auth/user/all";

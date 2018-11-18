@@ -24,6 +24,7 @@ Route::group([
     Route::post('logout', 'AuthController@logout')->name('auth.logout');
     Route::post('me', 'AuthController@me')->name('auth.me');
 
+    Route::post('user/all', 'UserController@all')->name('user.all');
     Route::post('user/{id}', 'UserController@show')->name('user.show');
 
     Route::view('/{path?}', 'spa')->where('path', '.*')->name('react');

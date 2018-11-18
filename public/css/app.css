@@ -10470,6 +10470,10 @@ a.text-dark:focus {
   }
 }
 
+body {
+  margin-bottom: 80px;
+}
+
 .navbar-laravel {
   background-color: #fff;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
@@ -10487,13 +10491,19 @@ a.text-dark:focus {
   text-align: center !important;
 }
 
-.footer {
-  position: absolute;
+.cur-pointer {
+  cursor: pointer !important;
+}
+
+#footer {
   bottom: 0;
   width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 60px;
-  background-color: #343a40;
-  color: #dadada;
+  position: absolute;
+  height: 80px;
+  background-color: #1c1c1c !important;
+}
+
+#footer .footer-block {
+  margin: 20px 0;
 }
 

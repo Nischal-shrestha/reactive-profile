@@ -17,4 +17,10 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         return response()->json(['user' => $user]);
     }
+
+    public function all()
+    {
+        $users = User::all();
+        return response()->json(['users' => $users]);
+    }
 }

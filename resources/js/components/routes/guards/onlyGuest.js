@@ -12,7 +12,6 @@ export default GuardedComponent => {
     class onlyGuestComponent extends Component {
         constructor(props, context) {
             super(props, context);
-            console.log("onlyGuest", props);
         }
 
         isLoggedIn = () => {

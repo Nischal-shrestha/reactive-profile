@@ -4,21 +4,31 @@ import GuestLinks from "./GuestLinks";
 import UserLinks from "./UserLinks";
 
 const Header = props => {
-    console.log("Header", props);
     return (
         <nav className="navbar navbar-expand-md navbar-dark bg-dark navbar-laravel">
             <div className="container">
-                <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-                    <Link className="navbar-brand" to="/">
-                        Reactive Profile
-                    </Link>
-
-                    {props.auth.loggedIn === false && <GuestLinks {...props} />}
-                    {props.auth.loggedIn === true && (
+                <Link className="navbar-brand" to="/">
+                    Reactive Profile
+                </Link>
+                <button
+                    className="navbar-toggler collapsed"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbar"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span className="navbar-toggler-icon" />
+                </button>
+                <div id="navbar" className="navbar-collapse collapse">
+                    {props.auth.loggedIn ? (
                         <UserLinks
                             logout={props.logout}
                             user_id={props.auth.user.id}
                         />
+                    ) : (
+                        <GuestLinks {...props} />
                     )}
                 </div>
             </div>

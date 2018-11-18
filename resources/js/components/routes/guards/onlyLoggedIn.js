@@ -14,14 +14,11 @@ export default GuardedComponent => {
     class onlyLoggedInComponent extends Component {
         constructor(props, context) {
             super(props, context);
-            console.log("onlyLoggedIn:mounted", props);
         }
 
         isLoggedIn = () => {
             const cookies = new Cookies();
             const token = cookies.get("JWT");
-            console.log("onlyLoggedIn:isloggedIn", this.props);
-            console.log("onlyLoggedIn", token);
             if (!this.props.auth.loggedIn) {
                 if (typeof token === "undefined") {
                     this.props.history.push("/login");

@@ -16,7 +16,6 @@ import NotFound from "../NotFound";
 class Routes extends Component {
     constructor(props) {
         super(props);
-        console.log("routes", props);
     }
 
     render() {

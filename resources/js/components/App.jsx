@@ -5,8 +5,7 @@ import Cookies from "universal-cookie";
 import axios from "axios";
 import Header from "./Header";
 import Routes from "./routes";
-import Footer from "./Footer";
-import { user_data_url, refresh_token_url, logout_url } from "./config";
+import { user_data_url, logout_url } from "./config";
 
 class App extends Component {
     state = {
@@ -68,23 +67,36 @@ class App extends Component {
      * the current state to that object
      */
     setAuthState = auth => {
-        if (!this.isCancelled) {
-            this.setState({
-                auth
-            });
-        }
+        this.setState({
+            auth
+        });
+    };
+
+    /**
+     * Returns a default state of the application
+     */
+    getDefaultState = () => {
+        const auth = {
+            user: {
+                id: "",
+                email: "",
+                name: ""
+            },
+            loggedIn: false
+        };
+        return auth;
     };
 
     /**
      * logout from current session
-     * TODO: DELETE COOKIE
      */
     logout = () => {
         const cookies = new Cookies();
         /**
          * Send a request to the server to
          * invalidate the token associated
-         * with the current user
+         * with the current user and deletes
+         * the JWT cookie
          */
         const token = cookies.get("JWT");
         if (typeof token !== "undefined") {
@@ -95,16 +107,7 @@ class App extends Component {
                 .then(response => {
                     if (response.data.status === "SUCCESS") {
                         cookies.remove("JWT", { path: "/" });
-                        this.setState({
-                            auth: {
-                                user: {
-                                    id: "",
-                                    email: "",
-                                    name: ""
-                                },
-                                loggedIn: false
-                            }
-                        });
+                        this.setAuthState(this.getDefaultState());
                     }
                 })
                 .catch(error => {
@@ -125,7 +128,6 @@ class App extends Component {
                         logout={this.logout}
                         getUserFromToken={this.getUserFromToken}
                     />
-                    {/* <Footer /> */}
                 </div>
             </BrowserRouter>
         );

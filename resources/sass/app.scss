@@ -10,6 +10,10 @@
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
 
+body {
+    margin-bottom: $height-footer;
+}
+
 .navbar-laravel {
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
@@ -27,13 +31,19 @@
     text-align: center !important;
 }
 
+.cur-pointer {
+    cursor: pointer !important;
+}
+
 // Footer css
-.footer {
-    position: absolute;
+#footer {
     bottom: 0;
     width: 100%;
-    /* Set the fixed height of the footer here */
-    height: 60px;
-    background-color: #343a40;
-    color: #dadada;
+    position: absolute;
+    height: $height-footer;
+    background-color: #1c1c1c !important;
+
+    .footer-block {
+        margin: 20px 0;
+    }
 }

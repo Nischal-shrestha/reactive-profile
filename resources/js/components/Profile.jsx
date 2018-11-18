@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import Cookies from "universal-cookie";
+import Hero from "./utilities/Hero";
+import UserLists from "./UserLists";
 import onlyLoggedInComponent from "./routes/guards/onlyLoggedIn";
 import axios from "axios";
 import { user_data_id_url } from "./config";
@@ -20,7 +22,6 @@ class Profile extends Component {
 
     constructor(props) {
         super(props);
-        console.log("profile", props);
     }
 
     getUserById = () => {
@@ -32,14 +33,15 @@ class Profile extends Component {
                     headers: { Authorization: token }
                 })
                 .then(response => {
+                    const own =
+                        this.props.match.params.userId ==
+                        this.props.auth.user.id;
                     this.setState({
                         profile: {
-                            user: response.data.user
-                        },
-                        own:
-                            response.data.user.id === this.props.auth.user.id
-                                ? true
-                                : false
+                            ...this.state.profile,
+                            user: response.data.user,
+                            own
+                        }
                     });
                 })
                 .catch(error => {
@@ -56,26 +58,15 @@ class Profile extends Component {
         this.getUserById();
     }
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.match.params.userId !== this.props.match.params.userId) {
-            this.getUserById();
+        if (prevState.profile.user.id != "") {
+            if (
+                prevProps.match.params.userId != this.props.match.params.userId
+            ) {
+                this.getUserById();
+            }
         }
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.match.params.userId !== prevState.profile.user.id) {
-            return {
-                ...prevState,
-                profile: {
-                    user: {
-                        ...prevState.profile.user,
-                        id: nextProps.match.params.userId
-                    }
-                }
-            };
-        } else {
-            return null;
-        }
-    }
     componentWillUnmount() {
         this.isCancelled = true;
     }
@@ -85,7 +76,23 @@ class Profile extends Component {
     render() {
         return (
             <div className="container">
-                <h2>Welcome {this.state.profile.user.name}</h2>
+                <h1 className="text-center mt-5">
+                    <b>Profile</b>
+                </h1>
+                <Hero
+                    title={this.state.profile.user.name}
+                    lead={
+                        this.state.profile.own
+                            ? "This is your profile"
+                            : "This is not your profile"
+                    }
+                    body={"Email : " + this.state.profile.user.email}
+                />
+                <div className="row">
+                    <div className="col-md-4">
+                        <UserLists />
+                    </div>
+                </div>
             </div>
         );
     }
